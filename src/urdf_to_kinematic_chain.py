@@ -125,5 +125,5 @@ class UrdfToKinematicChain():
 if __name__ == '__main__':
 
     kinematics = UrdfToKinematicChain("./resources/test_hand/test_hand.urdf")
-    results = np.matmul(kinematics.transformation_matrix['finger0'], np.array([1, 0, 0, 1]))
+    results = np.matmul(kinematics.transformation_matrix['finger1'], np.array([1, 0, 0, 1]))
     print(results)
