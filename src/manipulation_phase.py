@@ -1,18 +1,22 @@
 import pybullet as p
 from mojograsp.simcore.phase import Phase
-from mojograsp.simobjects.two_finger_gripper import TwoFingerGripper
-from mojograsp.simobjects.object_base import ObjectBase
+# from mojograsp.simobjects.two_finger_gripper import TwoFingerGripper
+# from mojograsp.simobjects.object_base import ObjectBase
+from modified_mojograsp_classes import UpdatedObjectBase, UpdatedTwoFingerGripper
 import expert_controller
 import gradient_controller
 from math import isclose
 
 
-class Manipulation(Phase):
+class AstriskManipulation(Phase):
 
-    def __init__(self, hand: TwoFingerGripper, obj: ObjectBase):
-        self.name = "close"
+    def __init__(self, hand: UpdatedTwoFingerGripper, obj: UpdatedObjectBase):
+        self.name = "manipulation"
         #self.target_pos = [0.75, -1.4, -0.75, 1.4]
-        self.target_pos = [7.4, 14, 7.4, 14]
+        # self.target_pos = [7.4, 14, -7.4, -14]
+        
+
+
         self.hand = hand
         self.obj = obj
         self.terminal_step = 1000
@@ -26,7 +30,7 @@ class Manipulation(Phase):
         self.timestep = 0
 
     def execute_action(self):
-        self.controller.set_goal_position([-.08, .15, 0])
+        self.controller.set_goal_position([0.3, 0.16, 0])
         self.controller.move_towards_goal()
         self.timestep += 1
 

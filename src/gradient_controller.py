@@ -14,16 +14,17 @@ from mojograsp.simobjects.object_base import ObjectBase
 class GradientDescentController():
     MAX_MOVE = 0.01
     
-    def __init__(self, gripper: TwoFingerGripper, cube: ObjectBase, data_file: str = None) -> None:
+    def __init__(self, gripper: TwoFingerGripper, cube: ObjectBase, gripper_kinematics, data_file: str = None) -> None:
         self.gripper = gripper
         self.cube = cube
         self.path = data_file
+        self.gripper_kinematics = gripper_kinematics
 
         # long term implementation will need these two lines
         self.fingers = {}
         self.setup_hand()
 
-        self.gripper_kinematics = {}
+        # self.gripper_kinematics = {}
 
         # short term using current hand using this
         self.end_effector_links = [1, 3] # change this so it can get the distal links for varing amounts of segments

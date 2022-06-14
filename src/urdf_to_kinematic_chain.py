@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import re
 import xmltodict
 import pprint
 import numpy as np
@@ -26,7 +25,7 @@ class UrdfToKinematicChain():
     def update_joint_angles(self, angles:list):
         self.joint_angles = angles
 
-    def calculate_forward_kinematics(self, joint_angles=None):
+    def calculate_forward_kinematics(self, joint_angles: list=None):
         if joint_angles == None:
             joint_angles = self.joint_angles
         

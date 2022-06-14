@@ -154,7 +154,7 @@ class ExpertController():
         else:
             goal = self.retry_contact()
 
-        print(self.gripper.get_joint_angles())
-        print(goal)
+        # print(self.gripper.get_joint_angles())
+        # print(goal)
         p.setJointMotorControlArray(self.gripper.id, jointIndices=self.gripper.get_joint_numbers(),
                                     controlMode=p.POSITION_CONTROL, targetPositions=goal)
