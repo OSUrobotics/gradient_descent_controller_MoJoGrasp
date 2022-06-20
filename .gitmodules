@@ -1,3 +1,0 @@
-[submodule "src/mojo-grasp"]
-	path = src/mojo-grasp
-	url = https://github.com/OSUrobotics/mojo-grasp.git
