@@ -15,5 +15,5 @@ re-attach to mojo-grasp:
     ```
 
     ```console
-    git check out refactor_branch
+    git check out main
     ```
