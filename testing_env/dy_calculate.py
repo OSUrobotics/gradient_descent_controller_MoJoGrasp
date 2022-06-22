@@ -32,35 +32,35 @@ def CalculateDeltY( palm_width, segment_ratio, max_span) -> None:
 
 if __name__ == '__main__':
 
-    # palm_width = .31
-    # max_span = .9
-    # segment_ratio = []
-    # results = []
-    # distal = []
-    # # print(len(np.arange(0.1,0.52, 0.02)))
-    # for distal_ratio in np.arange(0.1,0.52, 0.01):
-    #     # other_ratio = round(((1 - distal_ratio) / 2), 3)
-    #     other_ratio = round(1 - distal_ratio, 3)
-    #     segment_ratio.append([other_ratio, distal_ratio])
-    #     distal.append(distal_ratio) 
+    palm_width = .31
+    max_span = .9
+    segment_ratio = []
+    results = []
+    distal = []
+    # print(len(np.arange(0.1,0.52, 0.02)))
+    for distal_ratio in np.arange(0.1,0.52, 0.01):
+        # other_ratio = round(((1 - distal_ratio) / 2), 3)
+        other_ratio = round(1 - distal_ratio, 3)
+        segment_ratio.append([other_ratio, distal_ratio])
+        distal.append(distal_ratio) 
     
-    # # print(len(segment_ratio))
-    # finger_length = []
-    # delta_y = []
-    # for segment in segment_ratio:
+    # print(len(segment_ratio))
+    finger_length = []
+    delta_y = []
+    for segment in segment_ratio:
 
-    #     # print(segment)
-    #     fl, dy = CalculateDeltY(palm_width=palm_width, segment_ratio=segment, max_span=max_span)
-    #     finger_length.append(fl)
-    #     delta_y.append(dy)
+        # print(segment)
+        fl, dy = CalculateDeltY(palm_width=palm_width, segment_ratio=segment, max_span=max_span)
+        finger_length.append(fl)
+        delta_y.append(dy)
     
-    # # print(results)
+    # print(results)
 
-    # plt.plot(distal , delta_y) 
-    # plt.xlabel('Percent of Finger which is the Distal')
-    # plt.ylabel('Theoretical astrisk score for the North Direction')
-    # plt.title(f'Varying the Distal Link Percentage (palm width {palm_width} max span {max_span})')
-    # plt.show()
+    plt.plot(distal , delta_y) 
+    plt.xlabel('Percent of Finger which is the Distal')
+    plt.ylabel('Theoretical astrisk score for the North Direction')
+    plt.title(f'Varying the Distal Link Percentage (palm width {palm_width} max span {max_span})')
+    plt.show()
 
 
 

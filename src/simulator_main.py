@@ -74,17 +74,17 @@ if __name__ == '__main__':
 
     env_setup = {"hand": {"path": current_path+"/resources/test_hand/test_hand.urdf",
                         "position": [0.0, 0.0, 0.04],
-                        "orientation": p.getQuaternionFromEuler([0, pi/2, pi/2]),
-                        "scaling": 0.25,
+                        "orientation": p.getQuaternionFromEuler([0, pi/2, pi/2]), # [0, pi/2, pi/2]
+                        "scaling": 1.0, #0.25,
                         "fixed": True,
                         "distal_joints":[0,2],
                         "starting_joint_angles": [0,0,0,0],
                         "palm_color": [0.3, 0.3, 0.3, 1],
                         "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},
                  "object": {"path":current_path + "/resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf",
-                        "position": [0.0, 0.16, .05],
+                        "position": [0.0, .09, .05],
                         "orientation": [0, 0, 0, 1],
-                        "scaling": 2,
+                        "scaling": 1,
                         "fixed": False,
                         "color": [0.3, 0.3, 0.3, 1]},
                  "trial" : {"episode_number" : 2}}

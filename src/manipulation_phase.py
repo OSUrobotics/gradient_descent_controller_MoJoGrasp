@@ -30,7 +30,7 @@ class AstriskManipulation(Phase):
         self.timestep = 0
 
     def execute_action(self):
-        self.controller.set_goal_position([1.0, 0.16, 0])
+        self.controller.set_goal_position([0.0, 0.16, 0])
         self.controller.move_towards_goal()
         self.timestep += 1
 

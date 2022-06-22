@@ -12,7 +12,7 @@ class CloseHand(Phase):
         self.name = "close"
         #self.target_pos = [0.75, -1.4, -0.75, 1.4]
         #self.target_pos = [0.74, -1.4, -0.74, 1.4]
-        self.target_pos = [1, -1.4, 1, -1.4]
+        self.target_pos = [-1, 1.4, 1, -1.4]
         #self.target_pos = [1, -1.6, -1, 1.6]
         self.hand = hand
         self.obj = obj

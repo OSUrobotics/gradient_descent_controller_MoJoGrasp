@@ -45,6 +45,7 @@ class UrdfToKinematicChain():
                 joint_iterator += 1
 
             self.transformation_matrix[f'finger{i}'] = previouse_transform
+        return self.transformation_matrix
 
     def intial_kinematic_setup(self, joint_list):
         kinematic_chain = {}
