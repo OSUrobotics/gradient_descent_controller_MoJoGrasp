@@ -43,7 +43,7 @@ class sim_tester():
 
         gripper = boxId
 
-        p.resetDebugVisualizerCamera(cameraDistance=.2, cameraYaw=180, cameraPitch=-91, cameraTargetPosition=[0, 0.1, 0.1])
+        p.resetDebugVisualizerCamera(cameraDistance=.25, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0.0, 0.0])
 
         for i in range(0, p.getNumJoints(gripper)):
             
