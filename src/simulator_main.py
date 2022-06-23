@@ -42,7 +42,7 @@ def asterisk_simulation(env_setup):
     obj = UpdatedObjectBase(id=obj_id, path=obj_setup["path"], setup_parameters=obj_setup)
     # change visual of gripper
     p.changeVisualShape(hand_id, -1, rgbaColor=hand_setup["palm_color"])
-    for segment_number in range(len(hand_setup["segment_colors"])):                
+    for segment_number in range(len(hand_setup["segment_colors"])):
         p.changeVisualShape(hand_id, segment_number, rgbaColor=hand_setup["segment_colors"][segment_number])
     
     # state and reward
@@ -78,6 +78,7 @@ if __name__ == '__main__':
                         "scaling": 1.0, #0.25,
                         "fixed": True,
                         "distal_joints":[0,2],
+                        "distal_links": [],
                         "starting_joint_angles": [0,0,0,0],
                         "palm_color": [0.3, 0.3, 0.3, 1],
                         "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},

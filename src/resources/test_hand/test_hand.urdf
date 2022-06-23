@@ -76,7 +76,7 @@
     <joint name="finger1_segment0_joint" type="revolute">
         <parent link="palm"/>
         <child link="finger1_segment0"/>
-        <origin rpy="0 0 0.0" xyz=".9184850993605148e-17 -0.075 0"/>
+        <origin rpy="0 0 0.0" xyz="0 -0.075 0"/>
         <axis xyz="1 0 0"/>
         <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
     </joint>

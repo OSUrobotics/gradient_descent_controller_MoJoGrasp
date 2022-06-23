@@ -4,8 +4,11 @@ import xmltodict
 import pprint
 import numpy as np
 from math import sin, cos, pi
+from pprint import pprint
 
-
+# * This gives the transform matrix from the distal joint frame to the palm frame.
+# * Usage: T_pw * T * V
+# * T_pw = transform from palm to world,     T = transform from this class,   V = vector from the frame of the distal link 
 class UrdfToKinematicChain():
 
     def __init__(self, urdf_file) -> None:
@@ -125,5 +128,9 @@ class UrdfToKinematicChain():
 if __name__ == '__main__':
 
     kinematics = UrdfToKinematicChain("./resources/test_hand/test_hand.urdf")
-    results = np.matmul(kinematics.transformation_matrix['finger1'], np.array([1, 0, 0, 1]))
+    results = np.matmul(kinematics.transformation_matrix['finger1'], np.array([0, 0, 0, 1]))
     print(results)
+
+    pprint(kinematics.kinematic_chain)
+
+
