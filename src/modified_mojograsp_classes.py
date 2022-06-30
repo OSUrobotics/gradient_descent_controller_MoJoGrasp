@@ -5,6 +5,7 @@ import pybullet as p
 
 from mojograsp.simobjects.two_finger_gripper import TwoFingerGripper
 from mojograsp.simobjects.object_base import ObjectBase
+from urdf_to_kinematic_chain import UrdfToKinematicChain
 
 
 
@@ -14,6 +15,7 @@ class UpdatedTwoFingerGripper(TwoFingerGripper):
         self.setup_param = setup_parameters
 
         self.fingers = self.setup_fingers()
+        self.kinematics = UrdfToKinematicChain(urdf_file=path)
 
     def setup_fingers(self):
         # joint_finger = {}
@@ -24,13 +26,12 @@ class UpdatedTwoFingerGripper(TwoFingerGripper):
             # print(joint_info)
 
             finger_num, _ = joint_info[12].decode('UTF-8').split('_')
-            if joint_info[-1] == -1:
-                fingers_dict[finger_num] = {"index_values" : [-1,joint_info[0]], "joint_names": [joint_info[1].decode('UTF-8')], "link_names":[joint_info[12].decode('UTF-8')]}
+            if joint_info[-1] == -1:  # * Currently gradient controller is expecting the first to be for the first joint/link not the palm which is index -1
+                fingers_dict[finger_num] = {"index_values" : [joint_info[0]], "joint_names": [joint_info[1].decode('UTF-8')], "link_names":[joint_info[12].decode('UTF-8')]}
             else:
                 fingers_dict[finger_num]["index_values"].append(joint_info[0])
                 fingers_dict[finger_num]["link_names"].append(joint_info[12].decode('UTF-8'))
                 fingers_dict[finger_num]["joint_names"].append(joint_info[1].decode('UTF-8'))
-        
         return fingers_dict
 
 

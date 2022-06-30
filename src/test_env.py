@@ -13,36 +13,28 @@ from helper_functions import Helper as HF
 from modified_mojograsp_classes import UpdatedTwoFingerGripper, UpdatedObjectBase
 from hand_controller import HandController
 
-if __name__ == '__main__':
+current_path = pathlib.Path(__file__).parent.resolve()
 
-    current_path = pathlib.Path(__file__).parent.resolve()
-
-
-    # print(pathlib.Path().resolve())
-    # print(current_path / "resources/test_hand/test_hand.urdf")
-    # os.chdir(current_path / "resources/test_hand/")
-    # print(pathlib.Path().resolve())
-    
-    
+def test1():
     env_setup = {"hand": {"path": str(current_path / "resources/test_hand/test_hand.urdf"),
-                        "position": [0.0, 0.0, 0.04],
-                        "orientation": p.getQuaternionFromEuler([0, pi/2, pi/2]), # [0, pi/2, pi/2]
-                        "scaling": 1.0, #0.25,
-                        "fixed": True,
-                        "starting_joint_angles": [0,0,0,0],
-                        "palm_color": [0.3, 0.3, 0.3, 1],
-                        "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},
-                 "object": {"path": str(current_path /  "resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf"),
-                        "position": [0.0, .09, .05],
-                        "orientation": [0, 0, 0, 1],
-                        "scaling": 1,
-                        "fixed": False,
-                        "color": [0.3, 0.3, 0.3, 1]},
-                 "trial" : {"episode_number" : 2}}
-    
+                    "position": [0.0, 0.0, 0.04],
+                    "orientation": p.getQuaternionFromEuler([0, pi/2, pi/2]), # [0, pi/2, pi/2]
+                    "scaling": 1.0, #0.25,
+                    "fixed": True,
+                    "starting_joint_angles": [0,0,0,0],
+                    "palm_color": [0.3, 0.3, 0.3, 1],
+                    "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},
+            "object": {"path": str(current_path /  "resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf"),
+                    "position": [0.0, .09, .05],
+                    "orientation": [0, 0, 0, 1],
+                    "scaling": 1,
+                    "fixed": False,
+                    "color": [0.3, 0.3, 0.3, 1]},
+            "trial" : {"episode_number" : 2}}
+
     hand_setup = env_setup['hand']
     obj_setup = env_setup['object']
-    
+
     # physics_client = p.connect(p.GUI)
     physics_client = p.connect(p.DIRECT)
     # p.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -51,7 +43,6 @@ if __name__ == '__main__':
                                 cameraTargetPosition=[0, 0.1, 0.5])
 
     hand_id = HF.load_mesh(hand_setup)
-    
 
     hand = UpdatedTwoFingerGripper(hand_id, path=hand_setup["path"], setup_parameters=hand_setup, name=hand_setup['path'].split('/')[-1].split('.')[0])
     obj_id = HF.load_mesh(obj_setup)
@@ -60,25 +51,59 @@ if __name__ == '__main__':
     # for finger in hand.fingers.keys():
     #     print(hand.fingers[finger])
 
-
     a = obj.get_curr_pose()
     print(a)
 
 
-    # controller = HandController(hand, obj)
+
+def test2():
+    env_setup = {"hand": {"path": str(current_path / "resources/test_hand/test_hand.urdf"),
+                    "position": [0.0, 0.0, 0.04],
+                    "orientation": p.getQuaternionFromEuler([0, pi/2, pi/2]), # [0, pi/2, pi/2]
+                    "scaling": 1.0, #0.25,
+                    "fixed": True,
+                    "starting_joint_angles": [0,0,0,0],
+                    "palm_color": [0.3, 0.3, 0.3, 1],
+                    "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},
+                "object": {"path": str(current_path /  "resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf"),
+                        "position": [0.0, .09, .05],
+                        "orientation": [0, 0, 0, 1],
+                        "scaling": 1,
+                        "fixed": False,
+                        "color": [0.3, 0.3, 0.3, 1]},
+                "trial" : {"episode_number" : 2}}
     
+    for i in env_setup:
+        print(i)
+
+
+def test3():
+    return [1,2]
+
+
+
+if __name__ == '__main__':
+
+    # test1()
+#     test2()
+    # test, test4 = test3()
+    # print(test4)
+
+    # print(pathlib.Path().resolve())
+    # print(current_path / "resources/test_hand/test_hand.urdf")
+    # os.chdir(current_path / "resources/test_hand/")
+    # print(pathlib.Path().resolve())
+
+    # controller = HandController(hand, obj)
+
     # print(controller.end_effector_links)
     # num_joints = p.getNumJoints(hand)
-    
-
-
 
     # print("\n\n\n")
     # for i in range(num_joints):
     #     print(p.getJointInfo(hand, i)[12].decode('UTF-8'))
 
     # kc = UrdfToKinematicChain('/home/jcampbell/git_repos/optimize_hand_design/src/resources/test_hand/test_hand.urdf')
-
 
     # a = kc.calculate_forward_kinematics(joint_angles=[0,3.14, 0, 3.14])
 

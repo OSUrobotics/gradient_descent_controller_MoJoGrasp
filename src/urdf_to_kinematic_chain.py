@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
+import pathlib
 import xmltodict
-import pprint
 import numpy as np
 from math import sin, cos, pi
 from pprint import pprint
@@ -11,7 +11,7 @@ from pprint import pprint
 # * T_pw = transform from palm to world,     T = transform from this class,   V = vector from the frame of the distal link 
 class UrdfToKinematicChain():
 
-    def __init__(self, urdf_file) -> None:
+    def __init__(self, urdf_file: str) -> None:
         
         robot_urdf = self.read_urdf(urdf_file=urdf_file)
         # pprint.pprint(robot_urdf['joint'][0], indent=2)
@@ -22,33 +22,43 @@ class UrdfToKinematicChain():
         # pprint.pprint(self.kinematic_chain, indent=2)
         self.transformation_matrix = {}
 
-        self.calculate_forward_kinematics()
+        self.calculate_forward_kinematics(setup_trigger=True)
         # pprint.pprint(self.transformation_matrix)
                  
-    def update_joint_angles(self, angles:list):
+    def update_joint_angles(self, angles: list):
         self.joint_angles = angles
 
-    def calculate_forward_kinematics(self, joint_angles: list=None):
+    def calculate_forward_kinematics(self, joint_angles: list=None, setup_trigger=False):
         if joint_angles == None:
-            joint_angles = self.joint_angles
+            joint_angles = self.joint_angles.copy()
         
         joint_iterator = 0
 
-        for i in range(len(self.kinematic_chain.keys())):
-            finger_chain = self.kinematic_chain[f'finger{i}']
+        for finger in self.kinematic_chain:
+            
+        # for i in range(len(self.kinematic_chain.keys())):
+            finger_chain = self.kinematic_chain[finger]
             
             previouse_transform = np.identity(4)
             for joint in finger_chain:
+                # pprint(joint)
                 trans = self.translation_matrix(joint['translation'])
                 orient = self.rotation_matrix(rotation_axis=joint['orientation'])
+                # print(joint['orientation'])
                 joint_rot = self.rotation_matrix(rotation_axis= joint['joint_axis'], angle=joint_angles[joint_iterator])
+                # print(joint_rot)
+                # print(joint_angles[joint_iterator])
                 previouse_transform = np.matmul(previouse_transform, np.matmul(trans, np.matmul(orient, joint_rot)))
+                # print(np.matmul(orient, joint_rot))
 
 
                 joint_iterator += 1
 
-            self.transformation_matrix[f'finger{i}'] = previouse_transform
-        return self.transformation_matrix
+            self.transformation_matrix[finger] = previouse_transform.copy()
+        
+        if setup_trigger == False:
+            return self.transformation_matrix
+            
 
     def intial_kinematic_setup(self, joint_list):
         kinematic_chain = {}
@@ -93,16 +103,16 @@ class UrdfToKinematicChain():
         # else:
             # print(f'incoming vector: {rotation_axis}, angle: {angle}')
         
-        if rotation_axis[0] == 1:
+        if int(rotation_axis[0]) == 1:
             rot_mat[:3, :3] = np.array([[1, 0, 0],
                                         [0, cos(angle), -sin(angle)],
                                         [0, sin(angle), cos(angle)]])
-        elif rotation_axis[1] == 1:
+        elif int(rotation_axis[1]) == 1:
             rot_mat[:3, :3] = np.array([
                                         [cos(angle), 0, sin(angle)],
                                         [0, 1, 0]
                                         [-sin(angle), 0, cos(angle)]])
-        elif rotation_axis[2] == 1:
+        elif int(rotation_axis[2]) == 1:
             rot_mat[:3, :3] = np.array([[cos(angle), -sin(angle), 0],
                                         [sin(angle), cos(angle), 0],
                                         [0, 0, 1]])
@@ -126,11 +136,20 @@ class UrdfToKinematicChain():
 
 
 if __name__ == '__main__':
+    file_directory = str(pathlib.Path(__file__).parent.resolve())
 
-    kinematics = UrdfToKinematicChain("./resources/test_hand/test_hand.urdf")
-    results = np.matmul(kinematics.transformation_matrix['finger1'], np.array([0, 0, 0, 1]))
+    kinematics = UrdfToKinematicChain(f"{file_directory}/resources/test_hand/test_hand.urdf")
+    new_value = kinematics.calculate_forward_kinematics(joint_angles=[0, 0, pi/2, 0])
+    print(new_value['finger1'])
+    results = kinematics.transformation_matrix['finger1']
+    # results = np.matmul(kinematics.transformation_matrix['finger1'], np.array([0, 0, 0, 1]))
     print(results)
 
-    pprint(kinematics.kinematic_chain)
+    test2 = kinematics.calculate_forward_kinematics()
+    print(test2['finger1'])
+
+    # test = kinematics.rotation_matrix([0,0,1], pi/2)
+    # print(test)
+    # pprint(kinematics.kinematic_chain)
 
 

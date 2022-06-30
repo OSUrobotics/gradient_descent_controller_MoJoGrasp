@@ -12,7 +12,7 @@ import os
 import json
 import glob
 from math import pi
-
+import pathlib
 
 class sim_tester():
     """Simulator class to test different hands in."""
@@ -85,12 +85,12 @@ def read_json(file_loc):
 
 if __name__ == '__main__':
 
-    directory = os.getcwd()
+    directory = str(pathlib.Path(__file__).parent.resolve()) #os.getcwd()
 
     # file_content = read_json("./../src/.user_info.json")
     folders = []
     hand_names = []
-    for folder in glob.glob(f'./resources/*/'):
+    for folder in glob.glob(f'{directory}/resources/*/'):
         folders.append(folder)
 
 
