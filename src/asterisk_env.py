@@ -28,7 +28,7 @@ class AsteriskEnv(Environment):
         for segment_number in range(len(hand_setup["segment_colors"])):                
             p.changeVisualShape(hand_id, segment_number, rgbaColor=hand_setup["segment_colors"][segment_number])
             p.resetJointState(hand_id, segment_number, hand_setup["starting_joint_angles"][segment_number])
-
+        self.hand.kinematics.joint_angles = hand_setup["starting_joint_angles"]
 
     def setup(self):
         super().setup()

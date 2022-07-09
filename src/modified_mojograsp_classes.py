@@ -7,6 +7,7 @@ from mojograsp.simobjects.two_finger_gripper import TwoFingerGripper
 from mojograsp.simobjects.object_base import ObjectBase
 from urdf_to_kinematic_chain import UrdfToKinematicChain
 
+from PrintTest import print_debug as printD
 
 
 class UpdatedTwoFingerGripper(TwoFingerGripper):
@@ -16,6 +17,7 @@ class UpdatedTwoFingerGripper(TwoFingerGripper):
 
         self.fingers = self.setup_fingers()
         self.kinematics = UrdfToKinematicChain(urdf_file=path)
+        self.kinematics.update_joint_angles(setup_parameters["starting_joint_angles"])
 
     def setup_fingers(self):
         # joint_finger = {}
@@ -32,6 +34,7 @@ class UpdatedTwoFingerGripper(TwoFingerGripper):
                 fingers_dict[finger_num]["index_values"].append(joint_info[0])
                 fingers_dict[finger_num]["link_names"].append(joint_info[12].decode('UTF-8'))
                 fingers_dict[finger_num]["joint_names"].append(joint_info[1].decode('UTF-8'))
+        
         return fingers_dict
 
 

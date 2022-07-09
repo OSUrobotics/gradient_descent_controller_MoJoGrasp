@@ -54,7 +54,7 @@ class UrdfToKinematicChain():
 
                 joint_iterator += 1
 
-            self.transformation_matrix[finger] = previouse_transform.copy()
+            self.transformation_matrix[finger] = np.around(previouse_transform.copy(), 5)
         
         if setup_trigger == False:
             return self.transformation_matrix
@@ -138,15 +138,15 @@ class UrdfToKinematicChain():
 if __name__ == '__main__':
     file_directory = str(pathlib.Path(__file__).parent.resolve())
 
-    kinematics = UrdfToKinematicChain(f"{file_directory}/resources/test_hand/test_hand.urdf")
+    kinematics = UrdfToKinematicChain(f"{file_directory}/resources/2v2_hand/hand/2v2_hand.urdf")
     new_value = kinematics.calculate_forward_kinematics(joint_angles=[0, 0, pi/2, 0])
-    print(new_value['finger1'])
-    results = kinematics.transformation_matrix['finger1']
-    # results = np.matmul(kinematics.transformation_matrix['finger1'], np.array([0, 0, 0, 1]))
+    print(new_value['finger0'])
+    # results = kinematics.transformation_matrix['finger1']
+    results = np.matmul(kinematics.transformation_matrix['finger0'], np.array([0, 0, 0.072, 1]))
     print(results)
 
-    test2 = kinematics.calculate_forward_kinematics()
-    print(test2['finger1'])
+    # test2 = kinematics.calculate_forward_kinematics()
+    # print(test2['finger1'])
 
     # test = kinematics.rotation_matrix([0,0,1], pi/2)
     # print(test)

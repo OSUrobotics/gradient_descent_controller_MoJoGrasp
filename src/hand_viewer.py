@@ -17,7 +17,7 @@ import pathlib
 class sim_tester():
     """Simulator class to test different hands in."""
 
-    def __init__(self, gripper_name, gripper_loc):
+    def __init__(self, gripper_name, gripper_loc=None):
         """Initialize the sim_tester class.
 
         Args:
@@ -27,7 +27,8 @@ class sim_tester():
         self.gripper_name = gripper_name
         self.gripper_loc = gripper_loc
         
-        self.directory = os.path.dirname(__file__)
+        # self.directory = os.path.dirname(__file__)
+        self.directory = str(pathlib.Path(__file__).parent.resolve())
 
 
     def main(self):
@@ -38,22 +39,24 @@ class sim_tester():
         LinkId = []
         cubeStartPos = [0, 0, 1]
         cubeStartOrientation = p.getQuaternionFromEuler([0, 0, 0])
+        plane_id = p.loadURDF("plane.urdf")
+        hand_id = p.loadURDF(self.gripper_name, useFixedBase=1, basePosition=[0,0,0.04])#, baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]))
 
-        boxId = p.loadURDF(f"{self.gripper_loc}/{self.gripper_name}.urdf", useFixedBase=1)#, baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]))
 
-        gripper = boxId
-
-        p.resetDebugVisualizerCamera(cameraDistance=.25, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0.0, 0.0])
-
-        for i in range(0, p.getNumJoints(gripper)):
+        p.resetDebugVisualizerCamera(cameraDistance=.02, cameraYaw=0, cameraPitch=-89.9999,
+                                cameraTargetPosition=[0, 0.1, 0.5])
+        joint_angles = [-.695, 1.487, 0.695, -1.487]
+        for i in range(0, p.getNumJoints(hand_id)):
+            p.resetJointState(hand_id, i, joint_angles[i])
             
-            p.setJointMotorControl2(gripper, i, p.POSITION_CONTROL, targetPosition=0, force=0)
-            linkName = p.getJointInfo(gripper, i)[12].decode("ascii")
+            p.setJointMotorControl2(hand_id, i, p.POSITION_CONTROL, targetPosition=joint_angles[i], force=0)
+            linkName = p.getJointInfo(hand_id, i)[12].decode("ascii")
             if "sensor" in linkName:
                 LinkId.append("skip")
             else:
-                LinkId.append(p.addUserDebugParameter(linkName, -3.14, 3.14, 0))
+                LinkId.append(p.addUserDebugParameter(linkName, -3.14, 3.14, joint_angles[i]))
 
+        box_id = p.loadURDF("/resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf", basePosition=[0,0.1067,.04])
 
 
         while p.isConnected():
@@ -64,7 +67,7 @@ class sim_tester():
             for i in range(0, len(LinkId)):
                 if LinkId[i] != "skip":
                     linkPos = p.readUserDebugParameter(LinkId[i])
-                    p.setJointMotorControl2(gripper, i, p.POSITION_CONTROL, targetPosition=linkPos)
+                    p.setJointMotorControl2(hand_id, i, p.POSITION_CONTROL, targetPosition=linkPos)
 
 
         p.disconnect()
@@ -90,20 +93,24 @@ if __name__ == '__main__':
     # file_content = read_json("./../src/.user_info.json")
     folders = []
     hand_names = []
-    for folder in glob.glob(f'{directory}/resources/*/'):
-        folders.append(folder)
+    # for folder in glob.glob(f'{directory}/resources/*/'):
+    #     folders.append(folder)
 
-
+    folders = sorted(pathlib.Path(f'{directory}/resources/').glob('**/*.urdf'))
+    # print(urdfs)
     for i, hand in enumerate(folders):
-        temp_hand = hand.split('/')
-        hand_names.append(temp_hand[-2])
-        print(f'{i}:   {temp_hand[-2]}')
+        temp_hand = str(hand).split('/')
+        # print(temp_hand)
+        hand_names.append(str(hand))
+        print(f'{i}:   {temp_hand[-1][:-5]}')
 
     input_num = input("Enter the number of the hand you want loaded:   ")
     num = int(input_num)
 
     hand_name = hand_names[num]
-    hand_loc = folders[num]
 
-    sim_test = sim_tester(hand_name, hand_loc)
+    print(hand_name)
+    # hand_loc = folders[num]
+
+    sim_test = sim_tester(hand_name)
     sim_test.main()

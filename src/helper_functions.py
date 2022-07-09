@@ -5,6 +5,7 @@ from itertools import chain
 import pybullet as p
 import numpy as np
 from math import sin, cos, pi
+import logging, colorlog
 
 class Helper():
     def __init__(self) -> None:
@@ -21,6 +22,15 @@ class Helper():
         return mesh_id
 
 
+def colored_logging(name:str):
+    logger = logging.getLogger(name=name)
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(colorlog.ColoredFormatter("\n%(log_color)s%(levelname)s - %(name)s - %(message)s%(reset)s\n\n", log_colors={'DEBUG':'cyan', 'WARNING':'yellow', "ERROR":'red'}))
+    logger.addHandler(handler)
+    logger.setLevel(logging.ERROR)
+    logger.propagate = False
+    return logger
 
 
 # class FingerKinematics():
