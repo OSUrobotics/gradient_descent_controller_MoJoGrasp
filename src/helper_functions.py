@@ -17,7 +17,8 @@ class Helper():
         mesh_id = p.loadURDF(mesh_setup["path"], useFixedBase=mesh_setup["fixed"], 
                              basePosition=mesh_setup["position"], 
                              baseOrientation=mesh_setup["orientation"],
-                             globalScaling=mesh_setup["scaling"])
+                             globalScaling=mesh_setup["scaling"], 
+                             flags=p.URDF_USE_SELF_COLLISION|p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)
         
         return mesh_id
 
@@ -28,7 +29,7 @@ def colored_logging(name:str):
     handler = logging.StreamHandler()
     handler.setFormatter(colorlog.ColoredFormatter("\n%(log_color)s%(levelname)s - %(name)s - %(message)s%(reset)s\n\n", log_colors={'DEBUG':'cyan', 'WARNING':'yellow', "ERROR":'red'}))
     logger.addHandler(handler)
-    logger.setLevel(logging.ERROR)
+    logger.setLevel(logging.DEBUG)
     logger.propagate = False
     return logger
 

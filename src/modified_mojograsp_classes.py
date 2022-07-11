@@ -7,7 +7,6 @@ from mojograsp.simobjects.two_finger_gripper import TwoFingerGripper
 from mojograsp.simobjects.object_base import ObjectBase
 from urdf_to_kinematic_chain import UrdfToKinematicChain
 
-from PrintTest import print_debug as printD
 
 
 class UpdatedTwoFingerGripper(TwoFingerGripper):

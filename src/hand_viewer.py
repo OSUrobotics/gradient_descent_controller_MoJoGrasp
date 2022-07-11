@@ -56,7 +56,7 @@ class sim_tester():
             else:
                 LinkId.append(p.addUserDebugParameter(linkName, -3.14, 3.14, joint_angles[i]))
 
-        box_id = p.loadURDF("/resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf", basePosition=[0,0.1067,.04])
+        box_id = p.loadURDF(f"{self.directory}/resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf", basePosition=[0,0.1067,.04])
 
 
         while p.isConnected():

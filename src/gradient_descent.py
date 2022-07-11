@@ -16,6 +16,7 @@ class GradientDescent():
 
     def __init__ (self, hand: UpdatedTwoFingerGripper, finger:str, contact_in_distal:list , goal_contact_pose):
         self.MAX_ERROR = 0.00001 # meters
+        self.EXIT_CONDITION_LOOP = 1000
         self.STEP_SIZE = pi/75 # radients
         self.REDUCE_STEP_SIZE = 0.75
         self.hand = hand
@@ -42,7 +43,7 @@ class GradientDescent():
         counter_outer = 0
         while True:
 
-            if counter_outer >= 2000:
+            if counter_outer >= self.EXIT_CONDITION_LOOP:
                 return False
             
             # logger.debug(f'previous_delta:\n{previous_delta}')

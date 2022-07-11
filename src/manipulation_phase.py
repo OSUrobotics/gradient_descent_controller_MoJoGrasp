@@ -2,11 +2,9 @@
 from mojograsp.simcore import episode
 import pybullet as p
 from mojograsp.simcore.phase import Phase
-# from mojograsp.simobjects.two_finger_gripper import TwoFingerGripper
-# from mojograsp.simobjects.object_base import ObjectBase
+
 from modified_mojograsp_classes import UpdatedObjectBase, UpdatedTwoFingerGripper
-import expert_controller
-# import gradient_controller
+
 from mojograsp.simcore.state import State
 from mojograsp.simcore.reward import Reward
 from mojograsp.simcore.action import Action

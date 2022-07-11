@@ -1,10 +1,11 @@
+#!/usr/bin/python3
 from distutils.core import setup
 from matplotlib.pyplot import close
 from mojograsp.simcore import record_data
 import pybullet as p
 import pybullet_data
 import pathlib
-import close_hand_phase
+# import close_hand_phase
 import manipulation_phase
 import asterisk_env
 from demos.expert_demo import expert_action
@@ -14,17 +15,17 @@ from mojograsp.simcore.reward import RewardDefault
 from mojograsp.simcore.environment import EnvironmentDefault
 from mojograsp.simcore.record_data import RecordDataJSON
 from modified_mojograsp_classes import UpdatedObjectBase, UpdatedTwoFingerGripper
-from helper_functions import Helper as HF
 from math import pi
+from helper_functions import Helper as HF
 
 
-
-
-# class simulation_main:
-#     def __init__(self, env_setup):
-        
     
 def asterisk_simulation(env_setup):
+    """Initiate and run mojograsp trials.
+
+    Args:
+        env_setup (dict): Dictionary containing three setup dictionaries with the keys of 'hand', 'object', and 'trial' see bottom of script or src/README.md for an example.
+    """
     # breaking up setup parameters
     hand_setup = env_setup["hand"]
     obj_setup = env_setup["object"]
@@ -82,14 +83,15 @@ def asterisk_simulation(env_setup):
 if __name__ == '__main__':
 
     current_path = str(pathlib.Path(__file__).parent.resolve())
-
-    env_setup = {"hand": {"path": current_path+"/resources/2v2_hand/hand/2v2_hand.urdf",
+    
+    # example of enviroment setup directory.
+    env_setup = {"hand": {"path": current_path+"/resources/2v2_Nigel/hand/2v2_Nigel.urdf",
                         "position": [0.0, 0.0, 0.03],
                         "orientation": p.getQuaternionFromEuler([0, 0, 0]), # [0, pi/2, pi/2]
                         "scaling": 1.0, #0.25,
                         "fixed": True,
-                        "distal_joints":[0,2],
-                        "distal_links": [],
+                        # "distal_joints":[0,2],
+                        # "distal_links": [],
                         "starting_joint_angles": [-.695, 1.487, 0.695, -1.487],
                         "palm_color": [0.3, 0.3, 0.3, 1],
                         "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},
@@ -99,32 +101,13 @@ if __name__ == '__main__':
                         "scaling": 1,
                         "fixed": False,
                         "color": [0.3, 0.3, 0.3, 1]},
-                 "trial" : {"episode_number" : 8,
+                 "trial" : {"episode_number" : 3,
                             "goal_locations" : {
-                                "x" : [0,   0.16, 0.16,   0.16, 0, -0.16, -.16, -.16], #[0.16, 0.16]
-                                "y" : [0.16,0.16, 0.1067, 0,    0,  0,   0.1067, .16]}}} #[0.1067, 0.1067]
+                                "x" : [0.0, -0.16, 0.16],#[0,   0.16, 0.16,   0.16, 0, -0.16, -.16, -.16], #[0.16, 0.16]
+                                "y" : [0, 0, 0]#[0.16,0.16, 0.1067, 0,    0,  0,   0.1067, .16]}}} #[0.1067, 0.1067]
+                            }}}
 
     asterisk_simulation(env_setup= env_setup)
 
 
-    
-# # load objects
-# plane_id = p.loadURDF("plane.urdf")
-# hand_id = p.loadURDF(hand_path, useFixedBase=True,
-#                      basePosition=[0.0, 0.0, 0.04],
-#                      baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]), globalScaling=0.25)
-
-# hand = TwoFingerGripper(hand_id, path=hand_path)
-
-# cube_id = p.loadURDF(cube_path, basePosition=[0.0, 0.16, .05])
-# cube = ObjectBase(cube_id, path=cube_path)
-
-
-
-
-# p.changeVisualShape(hand_id, -1, rgbaColor=[0.3, 0.3, 0.3, 1])
-# p.changeVisualShape(hand_id, 0, rgbaColor=[1, 0.5, 0, 1])
-# p.changeVisualShape(hand_id, 1, rgbaColor=[0.3, 0.3, 0.3, 1])
-# p.changeVisualShape(hand_id, 2, rgbaColor=[1, 0.5, 0, 1])
-# p.changeVisualShape(hand_id, 3, rgbaColor=[0.3, 0.3, 0.3, 1])
-
+ 
