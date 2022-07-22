@@ -129,7 +129,8 @@ dmypy.json
 .pyre/
 
 # vscode project settings
-.vscode/
+.vscode
 # Custom
 src/resources/*/
 src/data/episode_*
+!src/resources/2v2_Demo

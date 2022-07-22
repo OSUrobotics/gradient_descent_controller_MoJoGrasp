@@ -1,4 +1,4 @@
-
+#!/usr/bin/python3
 
 from ntpath import join
 import pybullet as p
