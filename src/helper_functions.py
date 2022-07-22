@@ -43,7 +43,7 @@ class ColorFormatter(logging.Formatter):
     yellow = '\033[93m'
     blue = '\033[94m'
     reset = '\033[0m'
-    format = "\n%(name)s | %(levelname)s | %(message)s\n"
+    format = "\n%(levelname)s | %(name)s | %(message)s\n"
     FORMATS = {logging.DEBUG: blue + format + reset,
                         logging.INFO: green + format + reset,
                         logging.WARNING: yellow + format + reset,

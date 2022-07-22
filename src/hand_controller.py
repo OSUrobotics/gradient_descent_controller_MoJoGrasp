@@ -7,14 +7,9 @@
 
 # from multiprocessing.dummy import current_process
 import pybullet as p
-
 import numpy as np
-
-
 from modified_mojograsp_classes import UpdatedObjectBase, UpdatedTwoFingerGripper
 from gradient_descent import GradientDescent
-
-import logging, colorlog
 import helper_functions as HF
 
 logger = HF.colored_logging(name="hand_controller")

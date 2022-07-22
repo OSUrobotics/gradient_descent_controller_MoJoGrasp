@@ -24,4 +24,4 @@ Re-attach to mojo-grasp: (only if you want the most updated version)
 
 * python 3.6.9
 * numpy 1.19.5
-* 
+* xmltodict 0.13.0

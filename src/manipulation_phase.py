@@ -1,4 +1,4 @@
-
+#!/usr/bin/python3
 from mojograsp.simcore import episode
 import pybullet as p
 from mojograsp.simcore.phase import Phase
