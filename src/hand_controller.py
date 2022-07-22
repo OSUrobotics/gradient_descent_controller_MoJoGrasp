@@ -5,7 +5,7 @@
 # Date: 7-6-2022
 
 
-from multiprocessing.dummy import current_process
+# from multiprocessing.dummy import current_process
 import pybullet as p
 
 import numpy as np
@@ -26,7 +26,7 @@ class HandController():
     def __init__(self, gripper: UpdatedTwoFingerGripper, cube: UpdatedObjectBase, ) -> None:
         self.hand = gripper
         self.cube = cube
-        self.MAX_MOVE = 0.0005
+        self.MAX_MOVE = 0.001 # 0.0005
         self.end_effector_links = [self.hand.fingers[finger]["index_values"][-1] for finger in self.hand.fingers.keys()]
         self.gradient_failed = False
         self.goal_position = None
@@ -64,7 +64,6 @@ class HandController():
             link_index.sort()
             contact_point_info = p.getContactPoints(self.cube.id, self.hand.id, linkIndexB=link_index[-1])
             if contact_point_info:
-                # print(f"\n\n{contact_points}\n\n")
                 contact_points[finger] = np.around(np.array(contact_point_info[0][6]), 5)
             else:
                 return None
@@ -94,10 +93,7 @@ class HandController():
                                                     endEffectorLinkIndices=distal_links, 
                                                     targetPositions=next_pose)
         
-        # print(f'\n\n{goal_angles}\n\n')
         return goal_angles
-
-
 
     def get_next_contact_points(self, current_contact_points: dict, distance_to_subgoal: list):
         next_contact = {}
@@ -113,36 +109,33 @@ class HandController():
         self.hand.kinematics.update_joint_angles = self.hand.get_joint_angles()
         
         for finger in self.hand.fingers:  # TODO: change to be numpy matrix math - probably ...
-            logger.debug(f'{finger}')
+            
+            #get the location of the finer contact in the world frame
             contact_point = np.around(np.array([current_contact_points[finger][0], current_contact_points[finger][1], 
                                         current_contact_points[finger][2], 1]), 5)
-            finger_pose = [(0,0,0),(0,0,0,1)]
-            T_distal_to_palm = self.hand.kinematics.calculate_forward_kinematics() #[(0,0,0),(0,0,0,1)]
-            # orientation_int = np.reshape(T_distal_palm_matrix[0:3, 0:3], (1,9))
-            # T_distal_palm = [T_distal_palm_matrix[0:3,3], orientation_int]
-            # T_palm_world = [(0,0,0),(0,0,0,1)]
+
+            # Get the transform matrix to go from world frame to distal link frame
+            T_distal_to_palm = self.hand.kinematics.calculate_forward_kinematics()
             T_palm_to_world = np.identity(4)
             T_palm_to_world[0:3,3] = self.hand.setup_param["position"]
             T_palm_to_world[0:3,0:3] = np.around(np.reshape(p.getMatrixFromQuaternion(self.hand.setup_param["orientation"]), (3,3)), 5)
-            # [self.hand.setup_param["position"], self.hand.setup_param["orientation"]]
-            # T_distal_to_world =  p.multiplyTransforms(, T_distal_palm[1], T_palm_to_world[0], T_palm_to_world[1])
-            
             logger.debug(f'\n{T_palm_to_world}  \n{T_distal_to_palm[finger]}')
+            # inverse the matrix from distal link to world to get the world to distal
             T_distal_to_world = np.matmul(T_palm_to_world, T_distal_to_palm[finger])
             T_world_to_distal = np.linalg.inv(T_distal_to_world)
-            
-            
+            # get contact point location in distal link frame
             contact_point_distal = np.matmul(T_world_to_distal, contact_point)
             logger.debug(f'T_world_to_distal \n{T_world_to_distal} \n contact_point\n{contact_point}\ncontact_point_distal\n{contact_point_distal}\nnext_contact_points\n{next_contact_points[finger]}')
+            # give the goal location and current finger config to and calculate the needed joint angles to get to the goal location
             GD = GradientDescent(self.hand, finger, contact_point_distal, next_contact_points[finger])
             new_angles = GD.gradient_calculator()
+            # checks if the GradientDescent fails due to not able to reduce the error 
             if new_angles == False:
                 self.gradient_failed = True
                 return False
             logger.debug(f'{new_angles}')
             self.hand.kinematics.joint_angles = new_angles
             next_link_positions_global[finger] = new_angles
-            # goals.append(new_angles)
                 
         return new_angles
 
@@ -162,34 +155,33 @@ class HandController():
 
         # Exits if we lost contact for 5 steps, we are within .01 of our goal, or if our distance has been getting worse for 20 steps
         if self.num_contact_loss > 10:
-            logger.debug(f'number of contact loss {self.num_contact_loss}\n\n')
+            logger.warning(f'number of contact loss {self.num_contact_loss}\n\n')
             self.distance_count = 0
             self.num_contact_loss = 0
             self.gradient_failed = False
             return True
         elif self.check_goal() < .01:
-            logger.debug('check goal is less than 0.01\n\n')
+            logger.warning('check goal is less than 0.01\n\n')
             self.distance_count = 0
             self.num_contact_loss = 0
             self.gradient_failed = False
             return True
 
         elif self.distance_count > 20:
-            logger.debug(f'distance count {self.distance_count}\n\n')
+            logger.warning(f'distance count {self.distance_count}\n\n')
             self.distance_count = 0
             self.num_contact_loss = 0
             self.gradient_failed = False
             return True
         # sets next previous distance to current distance
         elif self.gradient_failed == True:
-            logger.debug(f'gradient failed\n\n')
+            logger.warning(f'gradient failed\n\n')
             self.distance_count = 0
             self.num_contact_loss = 0
             self.gradient_failed = False
             return True
         self.prev_distance = self.check_goal()
         return False
-
 
     def get_next_action(self):
         # get current cube position
@@ -198,7 +190,6 @@ class HandController():
         next_cube_position, distance_to_subgoal = self.get_next_cube_position()
         # get current contact points
         current_contact_points = self.get_current_contact_points()
-        # print(f"\n\n{current_contact_points}\n\n")
 
         if current_contact_points:
             self.num_contact_loss = 0
@@ -215,4 +206,3 @@ class HandController():
             goal = self.retry_contact()
         
         return goal
-

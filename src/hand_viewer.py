@@ -1,17 +1,16 @@
+#!/usr/bin/python3
 """Script for testing the generated robot manipulators in a simply pybullet enviroment."""
 
 # Author: Josh Campbell, campbjos@oregonstate.edu
 # Date: 3-14-2022
 
-#!/usr/bin/python3
 
 import pybullet as p
 import time
 import pybullet_data
-import os
+# import os
 import json
-import glob
-from math import pi
+from numpy import pi
 import pathlib
 
 class sim_tester():
@@ -56,7 +55,7 @@ class sim_tester():
             else:
                 LinkId.append(p.addUserDebugParameter(linkName, -3.14, 3.14, joint_angles[i]))
 
-        box_id = p.loadURDF(f"{self.directory}/resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf", basePosition=[0,0.1067,.04])
+        # box_id = p.loadURDF(f"{self.directory}/resources/object_models/2v2_mod/2v2_mod_cuboid_small.urdf", basePosition=[0,0.1067,.04])
 
 
         while p.isConnected():
@@ -104,10 +103,18 @@ if __name__ == '__main__':
         hand_names.append(str(hand))
         print(f'{i}:   {temp_hand[-1][:-5]}')
 
-    input_num = input("Enter the number of the hand you want loaded:   ")
+    input_num = input("\033[92mEnter the number of the hand you want loaded:   \033[0m")
     num = int(input_num)
 
     hand_name = hand_names[num]
+
+    if input("\033[92m Do you want to load a second model? (y/n) \033[0m" ) == "y":
+        num2 = input("\032[91m Enter the number of the model you want loaded:   \033[0m")
+        print("Enter the position and orientation of the second model: ")
+        pose_list = ['x', 'y', 'z', 'roll', 'pitch', 'yaw']
+        pose_model2 = []
+        for i in pose_list:
+            pose_model2.append(int(input(f'\032[91mEnter value for {i}:   \032[0m'))
 
     print(hand_name)
     # hand_loc = folders[num]

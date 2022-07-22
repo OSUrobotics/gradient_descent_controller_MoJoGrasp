@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from cmath import pi, cos, sin
-from multiprocessing.dummy import current_process
+from numpy import pi, cos, sin
+# from multiprocessing.dummy import current_process
 
 import pybullet as p
 
@@ -15,8 +15,16 @@ logger = HF.colored_logging(name="gradient_descent")
 class GradientDescent():
 
     def __init__ (self, hand: UpdatedTwoFingerGripper, finger:str, contact_in_distal:list , goal_contact_pose):
+        """Initialize GradientDescent solver. The goal with this solver is take the current contact point between the distal finger and the object, finger config, and 
+
+        Args:
+            hand (UpdatedTwoFingerGripper): Hand object used in the simulator
+            finger (str): the name of the finger that the joint angles are being solved for.
+            contact_in_distal (list): [x,y,z] location of contact between current finger and object in the distal link frame
+            goal_contact_pose (_type_): _description_
+        """
         self.MAX_ERROR = 0.00001 # meters
-        self.EXIT_CONDITION_LOOP = 1000
+        self.EXIT_CONDITION_LOOP = 500 # The number of full loops the gradient descent will do until it determines it can't move
         self.STEP_SIZE = pi/75 # radients
         self.REDUCE_STEP_SIZE = 0.75
         self.hand = hand
@@ -34,8 +42,6 @@ class GradientDescent():
         logger.debug(f'palm to world transform: \n{self.palm_to_world}')
  
         
-
-    
     def gradient_calculator(self):
         gradient_test_val = 0.00001
         update_joint_angles = self.new_joint_angles.copy()
@@ -94,10 +100,3 @@ class GradientDescent():
         delta_vector = contact_in_world[0:2] - self.goal_contact_pose[:2]
         # logger.debug(f"\ncontact in world: \n{contact_in_world}\ngoal_contact: {self.goal_contact_pose}\nDelta vector:\n{delta_vector}, {np.linalg.norm(delta_vector)}")
         return np.linalg.norm(delta_vector)
-
-    # def gradient_calculations(self, next_contact_points: list):
-
-    #     for finger in range(len(self.fingers.keys())):
-    #         joint_angles = self.gripper.get_joint_angles(joint_numbers=self.fingers[f'finger{finger}'])
-    #         for link in self.fingers[f'finger{finger}']:
-    #             pass

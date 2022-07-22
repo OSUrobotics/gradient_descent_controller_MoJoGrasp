@@ -2,23 +2,25 @@
 from distutils.core import setup
 from matplotlib.pyplot import close
 from mojograsp.simcore import record_data
-import pybullet as p
-import pybullet_data
-import pathlib
-# import close_hand_phase
 import manipulation_phase
 import asterisk_env
 from demos.expert_demo import expert_action
+from demos.expert_demo import expert_reward
 from mojograsp.simcore.sim_manager import SimManagerDefault
 from mojograsp.simcore.state import StateDefault
 from mojograsp.simcore.reward import RewardDefault
 from mojograsp.simcore.environment import EnvironmentDefault
 from mojograsp.simcore.record_data import RecordDataJSON
 from modified_mojograsp_classes import UpdatedObjectBase, UpdatedTwoFingerGripper
-from math import pi
-from helper_functions import Helper as HF
+import helper_functions as HF
+from numpy import pi
+import pybullet as p
+import pybullet_data
+import pathlib
 
 
+
+logger = HF.colored_logging("simulator_main")
     
 def asterisk_simulation(env_setup):
     """Initiate and run mojograsp trials.
@@ -56,23 +58,22 @@ def asterisk_simulation(env_setup):
     # state and reward
     state = StateDefault(objects=[hand, obj])
     action = expert_action.ExpertAction()
-    # reward = RewardDefault()
+    reward = expert_reward.ExpertReward()
 
     # data recording
-    # record = RecordDataJSON(data_path=data_path, state=state, save_all=True)
+    record = RecordDataJSON(data_path=trial_setup["data_path"], state=state, action=action, reward=reward, save_all=True)
 
     # environment and recording
     env = asterisk_env.AsteriskEnv(hand=hand, obj=obj)
 
     # sim manager
-    manager = SimManagerDefault(num_episodes=trial_setup["episode_number"], env=env)
+    manager = SimManagerDefault(num_episodes=len(trial_setup["goal_locations"]["y"]), env=env, record_data=record)
 
     # close_hand = close_hand_phase.CloseHand(hand, obj=obj)
     manipulation = manipulation_phase.AstriskManipulation(hand, obj=obj, 
         x_goals = trial_setup["goal_locations"]["x"], y_goals=trial_setup["goal_locations"]["y"],
-        state=state, action=action, reward=None)
+        state=state, action=action, reward=reward)
 
-    # manager.add_phase("close", close_hand)
     manager.add_phase("manipulation", manipulation, start=True)
 
     manager.run()
@@ -90,8 +91,6 @@ if __name__ == '__main__':
                         "orientation": p.getQuaternionFromEuler([0, 0, 0]), # [0, pi/2, pi/2]
                         "scaling": 1.0, #0.25,
                         "fixed": True,
-                        # "distal_joints":[0,2],
-                        # "distal_links": [],
                         "starting_joint_angles": [-.695, 1.487, 0.695, -1.487],
                         "palm_color": [0.3, 0.3, 0.3, 1],
                         "segment_colors":[[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]},
@@ -101,10 +100,10 @@ if __name__ == '__main__':
                         "scaling": 1,
                         "fixed": False,
                         "color": [0.3, 0.3, 0.3, 1]},
-                 "trial" : {"episode_number" : 3,
+                 "trial" : {"data_path" : current_path + '/data/',
                             "goal_locations" : {
-                                "x" : [0.0, -0.16, 0.16],#[0,   0.16, 0.16,   0.16, 0, -0.16, -.16, -.16], #[0.16, 0.16]
-                                "y" : [0, 0, 0]#[0.16,0.16, 0.1067, 0,    0,  0,   0.1067, .16]}}} #[0.1067, 0.1067]
+                                "x" : [0,    0.16],#, 0.16,   0.16, 0, -0.16, -.16, -.16], #[0.0, -0.16, 0.16],#[0,   0.16, 0.16,   0.16, 0, -0.16, -.16, -.16], #[0.16, 0.16]
+                                "y" : [0.16, 0.16]#, 0.1067, 0,    0,  0,    0.1067, .16]#[0, 0, 0]#[0.16,0.16, 0.1067, 0,    0,  0,   0.1067, .16] #[0.1067, 0.1067]
                             }}}
 
     asterisk_simulation(env_setup= env_setup)

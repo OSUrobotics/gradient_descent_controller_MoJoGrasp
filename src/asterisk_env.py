@@ -3,7 +3,7 @@ from mojograsp.simcore.environment import Environment
 # from mojograsp.simobjects.object_base import ObjectBase
 from modified_mojograsp_classes import UpdatedObjectBase, UpdatedTwoFingerGripper
 import pybullet as p
-from helper_functions import Helper as HF
+import helper_functions as HF
 
 class AsteriskEnv(Environment):
     def __init__(self, hand: UpdatedTwoFingerGripper, obj: UpdatedObjectBase):

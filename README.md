@@ -1,19 +1,27 @@
-# optimize_hand_design
-Using mojo-grasp and robot hand generator to create hands that perform the asterisk test well.
+# Gradient Controller for mojo-grasp.
 
 
-install:
+## Setup:
+
+Clone the Repo:
 
     ```console
-    git clone --recurse-submodule https://github.com/JCampbell9/optimize_hand_design.git
+    git clone --recurse-submodule https://github.com/OSUrobotics/gradient_descent_controller_MoJoGrasp.git
     ```
 
-re-attach to mojo-grasp:
+Re-attach to mojo-grasp: (only if you want the most updated version)
 
     ```console
-    cd ~/optimize_hand_design/src/mojo-grasp/
+    cd ~/gradient_descent_controller_MoJoGrasp/src/mojo-grasp/
     ```
 
     ```console
     git check out main
     ```
+
+
+## Dependencies:
+
+* python 3.6.9
+* numpy 1.19.5
+* 

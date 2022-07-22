@@ -131,4 +131,4 @@ dmypy.json
 
 # Custom
 src/resources/*/
-src/data/*
+src/data/episode_*
