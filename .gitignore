@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# Custom
+src/resources/*/
+src/data/episode_*
