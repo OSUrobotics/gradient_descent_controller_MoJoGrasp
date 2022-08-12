@@ -5,19 +5,19 @@
 
 Clone the Repo:
 
-    ```console
-    git clone --recurse-submodule https://github.com/OSUrobotics/gradient_descent_controller_MoJoGrasp.git
-    ```
+```console
+git clone --recurse-submodule https://github.com/OSUrobotics/gradient_descent_controller_MoJoGrasp.git
+```
 
 Re-attach to mojo-grasp: (only if you want the most updated version)
 
-    ```console
-    cd ~/gradient_descent_controller_MoJoGrasp/src/mojo-grasp/
-    ```
+```console
+cd ~/gradient_descent_controller_MoJoGrasp/src/mojo-grasp/
+```
 
-    ```console
-    git check out main
-    ```
+```console
+git check out main
+```
 
 
 ## Dependencies:
