@@ -17,12 +17,13 @@ from numpy import pi
 import pybullet as p
 import pybullet_data
 import pathlib
+import time
 
 
 
 logger = HF.colored_logging("simulator_main")
     
-def asterisk_simulation(env_setup):
+def asterisk_simulation(env_setup, gui):
     """Initiate and run mojograsp trials.
 
     Args:
@@ -34,14 +35,17 @@ def asterisk_simulation(env_setup):
     trial_setup = env_setup["trial"]
     
     # start pybullet
-    physics_client = p.connect(p.GUI)
+    if gui == True:
+        physics_client = p.connect(p.GUI)
+    elif gui == False:
+        physics_client = p.connect(p.DIRECT)
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
     p.setGravity(0, 0, -10)
     
     # gui view port
     p.resetDebugVisualizerCamera(cameraDistance=.02, cameraYaw=0, cameraPitch=-89.9999,
-                                cameraTargetPosition=[0, 0.1, 0.5])
-    
+                                cameraTargetPosition=[0, 0.05, 0.5])
+    p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS,0)
     # load meshes
     plane_id = p.loadURDF("plane.urdf")
     hand_id = HF.load_mesh(hand_setup)
@@ -76,8 +80,9 @@ def asterisk_simulation(env_setup):
 
     manager.add_phase("manipulation", manipulation, start=True)
 
+    # input('Press "Enter" to Start Trial')
     manager.run()
-    manager.stall()
+    # manager.stall()
 
 
 
@@ -102,11 +107,17 @@ if __name__ == '__main__':
                         "color": [0.3, 0.3, 0.3, 1]},
                  "trial" : {"data_path" : current_path + '/data/',
                             "goal_locations" : {
-                                "x" : [0,    0.16, 0.16,   0.16, 0, -0.16, -.16, -.16],  # full astrisk test
-                                "y" : [0.16, 0.16, 0.1067, 0,    0,  0,    0.1067, .16]
+                                "x" : [0,      0.1,    0.1,    0.1,      0,      -0.1,      -0.1,   -0.1],  # full astrisk test
+                                "y" : [0.2067, 0.2067, 0.1067, 0.0067, 0.0067,   0.0067,   0.1067,  0.2067]
                             }}}
 
-    asterisk_simulation(env_setup= env_setup)
 
-
- 
+    # start_time = time.time()
+    # asterisk_simulation(env_setup= env_setup, gui=True)
+    # gui_time = time.time() - start_time
+    # print(f"\n\nTime for a gui run: {gui_time}")
+    start_time2 = time.time()
+    asterisk_simulation(env_setup= env_setup, gui=False)
+    nongui_time = time.time() - start_time2
+    # \nTime for a gui run: {gui_time}
+    print(f"\n\nTime for a non-gui run: {nongui_time}")

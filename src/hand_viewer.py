@@ -40,15 +40,19 @@ class sim_tester():
         LinkId = []
         cubeStartPos = [0, 0, 1]
         cubeStartOrientation = p.getQuaternionFromEuler([0, 0, 0])
-        plane_id = p.loadURDF("plane.urdf")
-        hand_id = p.loadURDF(self.gripper_name, useFixedBase=1, basePosition=[0,0,0.04], flags=p.URDF_USE_SELF_COLLISION|p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)#, baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]))
-
+        # plane_id = p.loadURDF("plane.urdf")
+        hand_id = p.loadURDF(self.gripper_name, useFixedBase=1, basePosition=[0,0,0.04], baseOrientation=p.getQuaternionFromEuler([0, pi/2, 0]), flags=p.URDF_USE_SELF_COLLISION|p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)#, baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]))
+        
+        hand_color = [[0.784, 0.008, 0.106, 1], [0.773, 0.533, 0.118, 1], [0.784, 0.008, 0.106, 1], [0.773, 0.533, 0.118, 1]]
+        p.changeVisualShape(hand_id, -1, rgbaColor=[0.3, 0.3, 0.3, 1])
 
         p.resetDebugVisualizerCamera(cameraDistance=.02, cameraYaw=0, cameraPitch=-89.9999,
-                                cameraTargetPosition=[0, 0.1, 0.5])
-        joint_angles = [-pi/2, 0, pi/2, 0]
+                                cameraTargetPosition=[0, 0.05, 0.5])
+        
+        joint_angles = [0, 0, 0, 0] #[-pi/2, 0, pi/2, 0]
         for i in range(0, p.getNumJoints(hand_id)):
             p.resetJointState(hand_id, i, joint_angles[i])
+            p.changeVisualShape(hand_id, i, rgbaColor=hand_color[i])
             
             p.setJointMotorControl2(hand_id, i, p.POSITION_CONTROL, targetPosition=joint_angles[i], force=0)
             linkName = p.getJointInfo(hand_id, i)[12].decode("ascii")
@@ -67,6 +71,7 @@ class sim_tester():
             time.sleep(1. / 240.)
 
             for i in range(0, len(LinkId)):
+
                 if LinkId[i] != "skip":
                     linkPos = p.readUserDebugParameter(LinkId[i])
                     p.setJointMotorControl2(hand_id, i, p.POSITION_CONTROL, targetPosition=linkPos)
@@ -119,9 +124,11 @@ if __name__ == '__main__':
         for i in pose_list:
             pose_model2.append(float(input(f'\033[91mEnter value for {i}:   \033[0m')))
 
-    second_mesh_name = [hand_names[num2], pose_model2[:3], pose_model2[3:]]
-    logger.debug(hand_name)
-    logger.debug(hand_names[num2])
+        second_mesh_name = [hand_names[num2], pose_model2[:3], pose_model2[3:]]
+        logger.debug(hand_name)
+        logger.debug(hand_names[num2])
 
-    sim_test = sim_tester(hand_name, second_mesh_name)
+        sim_test = sim_tester(hand_name, second_mesh_name)
+    else:
+        sim_test = sim_tester(hand_name)
     sim_test.main()
