@@ -40,14 +40,15 @@ class sim_tester():
         LinkId = []
         cubeStartPos = [0, 0, 1]
         cubeStartOrientation = p.getQuaternionFromEuler([0, 0, 0])
-        # plane_id = p.loadURDF("plane.urdf")
-        hand_id = p.loadURDF(self.gripper_name, useFixedBase=1, basePosition=[0,0,0.04], baseOrientation=p.getQuaternionFromEuler([0, pi/2, 0]), flags=p.URDF_USE_SELF_COLLISION|p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)#, baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]))
+        plane_id = p.loadURDF("plane.urdf")
+        hand_id = p.loadURDF(self.gripper_name, useFixedBase=1, basePosition=[0,0,0.04], baseOrientation=p.getQuaternionFromEuler([0, 0, 0]), flags=p.URDF_USE_SELF_COLLISION|p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)#, baseOrientation=p.getQuaternionFromEuler([0, pi/2, pi/2]))
         
-        hand_color = [[0.784, 0.008, 0.106, 1], [0.773, 0.533, 0.118, 1], [0.784, 0.008, 0.106, 1], [0.773, 0.533, 0.118, 1]]
+        hand_color = [[1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1], [1, 0.5, 0, 1], [0.3, 0.3, 0.3, 1]]
         p.changeVisualShape(hand_id, -1, rgbaColor=[0.3, 0.3, 0.3, 1])
 
         p.resetDebugVisualizerCamera(cameraDistance=.02, cameraYaw=0, cameraPitch=-89.9999,
                                 cameraTargetPosition=[0, 0.05, 0.5])
+        p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS,0)
         
         joint_angles = [0, 0, 0, 0] #[-pi/2, 0, pi/2, 0]
         for i in range(0, p.getNumJoints(hand_id)):
