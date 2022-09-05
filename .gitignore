@@ -131,6 +131,8 @@ dmypy.json
 # vscode project settings
 .vscode
 # Custom
+
 src/resources/*/
-src/data/episode_*
+src/data/*
 !src/resources/2v2_Demo
+!src/data/README.md
